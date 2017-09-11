@@ -1,0 +1,74 @@
+var inquirer = require('inquirer');
+var mysql = require('mysql');
+
+var connection = mysql.createConnection({
+	host: 'localhost',
+	port: 3306,
+	user: 'root',
+	password: 'Umass4001!',
+	database: 'bamazon'
+});
+
+connection.connect(function(err){
+	console.log("\nConnected as id: " + connection.threadId);
+	intro();
+});
+
+var intro = function(){
+	connection.query('SELECT * FROM products', function(err, res){
+		for(var i = 0; i < res.length; i++){
+			console.log("Item #: " + res[i].item_id + "; Product name: " + res[i].product_name + "; Department: " + res[i].department_name + "; Price (per unit): " + res[i].price + "; Quantity: " + res[i].stock_quantity);
+		}
+		console.log("");
+	})
+	setTimeout(start, 500);
+};
+
+var start = function(){
+	inquirer.prompt([{
+	name: 'item',
+	type: 'input',
+	message: 'Which item would you like to purchase? ',
+	validate: function(value){
+			if(isNaN(value) == false)
+				return true;
+			else
+				return false;
+		}
+	},{
+		name: 'quantity',
+		type: 'input',
+		message: 'How many units would you like to buy? ',
+		validate: function(value){
+			if(isNaN(value) == false)
+				return true;
+			else
+				return false;
+		}
+	}]).then(function(answer){
+		var query = "SELECT item_id, price, stock_quantity FROM products WHERE ?";
+		connection.query(query, {item_id: answer.item}, function(err, res){
+			console.log("Price (per unit): " + res[0].price + "; Quantity: " + res[0].stock_quantity);
+			if(answer.quantity > res[0].stock_quantity){
+				console.log("\nStock not available.");
+			}
+			else{
+				var total = (parseFloat(res[0].price) * parseInt(answer.quantity)).toFixed(2);
+				var newTotal = parseInt(res[0].stock_quantity) - parseInt(answer.quantity);
+				console.log("Stock is available. Your total charge is $" + total + ".\n");
+				makePurchase(newTotal, answer.item);
+			}
+			intro();
+		})
+	})
+};
+
+var makePurchase = function(newTotal, item){
+	var query = "UPDATE products SET ? WHERE ?";
+	connection.query(query, [{stock_quantity: newTotal}, {item_id: item}], function(err, res){
+		if(err)
+			throw err;
+		else
+			console.log("Purchase successful.");
+	});
+};
