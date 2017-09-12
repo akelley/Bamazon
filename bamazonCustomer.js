@@ -5,7 +5,7 @@ var connection = mysql.createConnection({
 	host: 'localhost',
 	port: 3306,
 	user: 'root',
-	password: 'Umass4001!',
+	password: 'password123',
 	database: 'bamazon'
 });
 
@@ -17,7 +17,7 @@ connection.connect(function(err){
 var intro = function(){
 	connection.query('SELECT * FROM products', function(err, res){
 		for(var i = 0; i < res.length; i++){
-			console.log("Item #: " + res[i].item_id + "; Product name: " + res[i].product_name + "; Department: " + res[i].department_name + "; Price (per unit): " + res[i].price + "; Quantity: " + res[i].stock_quantity);
+			console.log("Item #: " + res[i].item_id + "; Product name: " + res[i].product_name + "; Department: " + res[i].department_name + "; Price (per unit): " + parseFloat(res[i].price).toFixed(2) + "; Quantity: " + res[i].stock_quantity);
 		}
 		console.log("");
 	})
@@ -48,27 +48,20 @@ var start = function(){
 	}]).then(function(answer){
 		var query = "SELECT item_id, price, stock_quantity FROM products WHERE ?";
 		connection.query(query, {item_id: answer.item}, function(err, res){
-			console.log("Price (per unit): " + res[0].price + "; Quantity: " + res[0].stock_quantity);
+			console.log("Grand Total is $" + parseFloat(parseFloat(res[0].price).toFixed(2) * answer.quantity).toFixed(2) + "; Price (per unit) * Quantity ($" + parseFloat(res[0].price).toFixed(2) + " * " + answer.quantity + ")");
 			if(answer.quantity > res[0].stock_quantity){
 				console.log("\nStock not available.");
 			}
 			else{
-				var total = (parseFloat(res[0].price) * parseInt(answer.quantity)).toFixed(2);
-				var newTotal = parseInt(res[0].stock_quantity) - parseInt(answer.quantity);
-				console.log("Stock is available. Your total charge is $" + total + ".\n");
-				makePurchase(newTotal, answer.item);
+				var query = 'UPDATE products SET stock_quantity = stock_quantity - ' + answer.quantity + ' WHERE item_id = ' + answer.item;
+				connection.query(query, function(err, res){
+					if(err)
+						throw err;
+					else
+						console.log("Purchase successful.\n");
+				});
 			}
 			intro();
 		})
 	})
-};
-
-var makePurchase = function(newTotal, item){
-	var query = "UPDATE products SET ? WHERE ?";
-	connection.query(query, [{stock_quantity: newTotal}, {item_id: item}], function(err, res){
-		if(err)
-			throw err;
-		else
-			console.log("Purchase successful.");
-	});
 };
