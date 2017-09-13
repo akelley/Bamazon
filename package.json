@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/akelley/Bamazon#readme",
   "dependencies": {
+    "console.table": "^0.9.1",
     "inquirer": "^3.2.3",
     "mysql": "^2.14.1"
   }

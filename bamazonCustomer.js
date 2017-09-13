@@ -48,12 +48,13 @@ var start = function(){
 	}]).then(function(answer){
 		var query = "SELECT item_id, price, stock_quantity FROM products WHERE ?";
 		connection.query(query, {item_id: answer.item}, function(err, res){
-			console.log("Grand Total is $" + parseFloat(parseFloat(res[0].price).toFixed(2) * answer.quantity).toFixed(2) + "; Price (per unit) * Quantity ($" + parseFloat(res[0].price).toFixed(2) + " * " + answer.quantity + ")");
+			var sales = parseFloat(parseFloat(res[0].price).toFixed(2) * answer.quantity).toFixed(2);
+			console.log("Grand Total is $" + sales + "; Price (per unit) * Quantity ($" + parseFloat(res[0].price).toFixed(2) + " * " + answer.quantity + ")");
 			if(answer.quantity > res[0].stock_quantity){
 				console.log("\nStock not available.");
 			}
 			else{
-				var query = 'UPDATE products SET stock_quantity = stock_quantity - ' + answer.quantity + ' WHERE item_id = ' + answer.item;
+				var query = 'UPDATE products SET stock_quantity = stock_quantity - ' + answer.quantity + ', product_sales = product_sales + ' + sales + ' WHERE item_id = ' + answer.item;
 				connection.query(query, function(err, res){
 					if(err)
 						throw err;
