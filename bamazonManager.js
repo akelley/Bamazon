@@ -136,7 +136,8 @@ var addItem = function(){
       product_name: answer.product_name,
       department_name: answer.department_name,
       price: answer.price,
-      stock_quantity: answer.stock_quantity
+      stock_quantity: answer.stock_quantity,
+      product_sales: 0.00
     },
     function(err, res) {
 			if(err) 
