@@ -34,3 +34,22 @@ VALUES  ('Dove Shampoo', 'Cosmetics', 5.75, 500),
 		('Ibuprophen', 'Pharmacy', 4.95, 389),
 		('Band Aid', 'Pharmacy', 3.25, 550),
 		('Ben & Jerry Ice Cream', 'Grocery', 3.25, 432);
+		
+-- Create a table called 'departments' which will contain all the store's departments and their overhead costs --	
+CREATE TABLE departments (
+	department_id INTEGER(11) AUTO_INCREMENT NOT NULL,
+	department_name VARCHAR(50) NOT NULL,
+	overhead_costs DECIMAL(10,2) NOT NULL,
+	PRIMARY KEY (department_id)
+);
+
+-- Insert data into the 'departments' table --
+INSERT INTO products (department_name, overhead_costs)
+VALUES  ('Cosmetics', 50.75),
+	('Grocery', 300.00),
+	('Produce', 35.75),
+	('Children', 476.66),
+	('Sports', 150.00),
+	('Clothing', 120.55),
+	('Pet', 137.00),
+	('Pharmacy', 389.95);
