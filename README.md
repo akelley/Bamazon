@@ -6,7 +6,7 @@ This CLI application simulates a storefront using the npm [inquirer](https://www
 
 ### MySQL Database Setup
 
-To run this application, you should have the MySQL database already set up on your machine. If you don't, visit the [MySQL installation page](https://dev.mysql.com/doc/refman/5.6/en/installing.html) to install the latest version for your operating system. Once you have MySQL installed, you will be able to create the *Bamazon* database and the *products* table with the SQL code found in [Bamazon.sql](Bamazon.sql). Run this code inside your MySQL client to populate the database, then you will be ready to proceed with running the Bamazon interfaces.
+To run this application, you should have the MySQL database already set up on your machine. If you don't, visit the [MySQL installation page](https://dev.mysql.com/doc/refman/5.6/en/installing.html) to install the latest version for your operating system. Once you have MySQL installed, you will be able to create the *Bamazon* database, the *products* and *departments* tables with the SQL code found in [Bamazon.sql](Bamazon.sql). Run this code inside your MySQL client to populate the database, then you will be ready to proceed with running the Bamazon interfaces.
 
 ### Customer Interface
 
@@ -52,7 +52,7 @@ The supervisor interface presents a list of four options, as below.
 	❯ View Products Sales by Department
 	  Create New Department
 	  
-The **View Products Sales by Department** option allows the user to view total profit per department (total sales minus overhead costs).
+The **View Products Sales by Department** option allows the user to view total profits per department (total accumulated sales minus overhead costs).
 
 The **Create New Department** option allows the user to create a new department to place items into, along with the department's overhead costs.
 
